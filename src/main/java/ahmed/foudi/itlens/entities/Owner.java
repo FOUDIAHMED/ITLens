@@ -1,10 +1,11 @@
 package ahmed.foudi.itlens.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,9 +14,9 @@ public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String name;
 
     @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
-    private Set<Survey> surveys;
+    private List<Survey> surveys;
 }
