@@ -1,4 +1,4 @@
-package ahmed.foudi.itlens.mappers.ownermapper;
+package ahmed.foudi.itlens.mappers;
 
 import ahmed.foudi.itlens.dto.ownerdto.OwnerRequestDto;
 import ahmed.foudi.itlens.dto.ownerdto.OwnerResponseDto;

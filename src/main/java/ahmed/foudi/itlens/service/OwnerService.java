@@ -5,7 +5,7 @@ import ahmed.foudi.itlens.dao.OwnerDAO;
 import ahmed.foudi.itlens.dto.ownerdto.OwnerRequestDto;
 import ahmed.foudi.itlens.dto.ownerdto.OwnerResponseDto;
 import ahmed.foudi.itlens.entities.Owner;
-import ahmed.foudi.itlens.mappers.ownermapper.RequestOwnerDTOMapper;
+import ahmed.foudi.itlens.mappers.RequestOwnerDTOMapper;
 import ahmed.foudi.itlens.utils.ServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

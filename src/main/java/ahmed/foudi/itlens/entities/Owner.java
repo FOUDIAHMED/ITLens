@@ -2,13 +2,11 @@ package ahmed.foudi.itlens.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 public class Owner {
     @Id
@@ -19,4 +17,6 @@ public class Owner {
 
     @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
     private List<Survey> surveys;
+
+
 }
