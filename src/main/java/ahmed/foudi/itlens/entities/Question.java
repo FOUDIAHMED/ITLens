@@ -18,7 +18,7 @@ public class Question {
 
     private int answerCount;
 
-    @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="answer", fetch = FetchType.EAGER)
     private List<Answer> answers;
 
     public Question() {}
