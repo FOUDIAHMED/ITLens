@@ -23,4 +23,8 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "parent_subject_id")
     private Subject parentSubject;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "surveyedition_id", nullable = false)
+    private SurveyEdition surveyEdition;
 }

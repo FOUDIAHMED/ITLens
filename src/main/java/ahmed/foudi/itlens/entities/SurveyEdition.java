@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,5 +25,8 @@ public class SurveyEdition {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "survey_id", nullable = false)
     private Survey survey;
+
+    @OneToMany(mappedBy="surveyedition", fetch = FetchType.EAGER)
+    private List<Subject> subjects;
 
 }
