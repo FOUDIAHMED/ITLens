@@ -21,8 +21,8 @@ public class Question {
     @OneToMany(mappedBy="answer", fetch = FetchType.EAGER)
     private List<Answer> answers;
 
-    public Question() {}
-
+    @ManyToOne
+    private Subject subject;
 
 
 }
