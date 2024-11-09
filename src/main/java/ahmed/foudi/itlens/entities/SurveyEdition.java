@@ -26,7 +26,7 @@ public class SurveyEdition {
     @JoinColumn(name = "survey_id", nullable = false)
     private Survey survey;
 
-    @OneToMany(mappedBy="surveyedition", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Subject> subjects;
 
 }

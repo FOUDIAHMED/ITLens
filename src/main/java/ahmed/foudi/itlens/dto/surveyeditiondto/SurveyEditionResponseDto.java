@@ -1,5 +1,6 @@
 package ahmed.foudi.itlens.dto.surveyeditiondto;
 
+import ahmed.foudi.itlens.dto.surveydto.SurveyEmbdedDto;
 import ahmed.foudi.itlens.dto.surveydto.SurveyResponseDto;
 import ahmed.foudi.itlens.entities.Subject;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class SurveyEditionResponseDto {
 
     private int year;
 
-    private SurveyResponseDto survey;
+    private SurveyEmbdedDto survey;
 
     private List<Subject> subjects;
 }
