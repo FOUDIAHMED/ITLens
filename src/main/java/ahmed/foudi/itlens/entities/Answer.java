@@ -13,7 +13,7 @@ public class Answer {
     private Long id;
     private String answer;
     private int selectionCount;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Question question;
 
 }
