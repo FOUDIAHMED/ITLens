@@ -16,12 +16,15 @@ public class Question {
 
     private String question;
 
+    @Enumerated(EnumType.STRING)
+    private QuestionType questionType;
+
     private int answerCount;
 
-    @OneToMany(mappedBy="answer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="question", fetch = FetchType.EAGER)
     private List<Answer> answers;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Subject subject;
 
 
