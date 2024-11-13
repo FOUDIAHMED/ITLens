@@ -28,7 +28,8 @@ public class SurveyService implements ServiceInterface<Long, SurveyRequestDto, S
 
     @Override
     public SurveyResponseDto findById(Long id) {
-        Survey owner=surveyDAO.findById(id).get();
+        Survey owner=surveyDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("survey with id " + id + " not found"));
         return surveyRequestDtoMapper.toResponseDto(owner);
     }
 

@@ -26,7 +26,8 @@ public class OwnerService implements ServiceInterface<Long, OwnerRequestDto, Own
 
     @Override
     public OwnerResponseDto findById(Long id) {
-        Owner owner=ownerDAO.findById(id).get();
+        Owner owner = ownerDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Owner with id " + id + " not found"));
         return requestOwnerDTOMapper.toResponseDto(owner);
     }
 

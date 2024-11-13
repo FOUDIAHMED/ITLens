@@ -27,7 +27,8 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
 
     @Override
     public AnswerResponseDto findById(Long id) {
-        Answer answer = answerDAO.findById(id).orElseThrow(EntityNotFoundException::new);
+        Answer answer = answerDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("asnwer with id " + id + " not found"));
         return answerDtoMapper.toResponseDto(answer);
 
     }
@@ -57,4 +58,6 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
         throw new EntityNotFoundException("this entity with this id is not found");
 
     }
+
+    public answerQuestions()
 }

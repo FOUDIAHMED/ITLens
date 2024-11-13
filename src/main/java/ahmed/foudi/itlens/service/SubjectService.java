@@ -26,7 +26,9 @@ public class SubjectService implements ServiceInterface<Long, SubjectRequestDto,
 
     @Override
     public SubjectResponseDto findById(Long id) {
-        return subjectDtoMapper.toDto(subjectDAO.findById(id).get());
+        Subject subject=subjectDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("subject with id " + id + " not found"));
+        return subjectDtoMapper.toDto(subject);
     }
 
     @Override

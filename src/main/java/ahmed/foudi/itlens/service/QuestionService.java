@@ -28,7 +28,8 @@ public class QuestionService implements ServiceInterface<Long, QuestionRequestDt
 
     @Override
     public QuestionResponseDto findById(Long id) {
-        Question question = questionDAO.findById(id).orElseThrow(EntityNotFoundException::new);
+        Question question = questionDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Question with id " + id + " not found"));
         return questionDtoMapper.toResponseDto(question);
     }
 
