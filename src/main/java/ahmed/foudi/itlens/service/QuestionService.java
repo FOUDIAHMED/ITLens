@@ -1,9 +1,11 @@
 package ahmed.foudi.itlens.service;
 
 import ahmed.foudi.itlens.dao.QuestionDAO;
+import ahmed.foudi.itlens.dao.SubjectDAO;
 import ahmed.foudi.itlens.dto.questiondto.QuestionRequestDto;
 import ahmed.foudi.itlens.dto.questiondto.QuestionResponseDto;
 import ahmed.foudi.itlens.entities.Question;
+import ahmed.foudi.itlens.entities.Subject;
 import ahmed.foudi.itlens.mappers.QuestionDtoMapper;
 import ahmed.foudi.itlens.utils.ServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +19,7 @@ import java.util.List;
 public class QuestionService implements ServiceInterface<Long, QuestionRequestDto, QuestionResponseDto> {
     QuestionDAO  questionDAO;
     QuestionDtoMapper questionDtoMapper;
+    SubjectDAO subjectDAO;
 
 
 
@@ -36,7 +39,11 @@ public class QuestionService implements ServiceInterface<Long, QuestionRequestDt
     @Override
     public QuestionResponseDto create(QuestionRequestDto dto) {
         Question question = questionDtoMapper.toEntity(dto);
+
         questionDAO.save(question);
+        Subject subject = subjectDAO.findById(dto.getSubjectId()).orElseThrow(() -> new EntityNotFoundException("Subject with id " + dto.getSubjectId() + " not found"));
+        question.setSubject(subject);
+
         return questionDtoMapper.toResponseDto(question);
     }
 

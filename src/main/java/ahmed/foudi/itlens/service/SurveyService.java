@@ -1,5 +1,6 @@
 package ahmed.foudi.itlens.service;
 
+import ahmed.foudi.itlens.dao.OwnerDAO;
 import ahmed.foudi.itlens.dao.SurveyDAO;
 import ahmed.foudi.itlens.dto.surveydto.SurveyEmbdedDto;
 import ahmed.foudi.itlens.dto.surveydto.SurveyRequestDto;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SurveyService implements ServiceInterface<Long, SurveyRequestDto, SurveyResponseDto> {
     private  final SurveyDAO surveyDAO;
-    private final OwnerService ownerService;
+    private final OwnerDAO ownerDAO;
     private final SurveyRequestDtoMapper surveyRequestDtoMapper;
     @Override
     public List<SurveyResponseDto> findAll() {
@@ -36,10 +37,12 @@ public class SurveyService implements ServiceInterface<Long, SurveyRequestDto, S
     @Override
     public SurveyResponseDto create(SurveyRequestDto dto) {
         Survey savedSurvey = surveyDAO.save(surveyRequestDtoMapper.toEntity(dto));
-        Survey surveyWithOwner = surveyDAO.findById(savedSurvey.getId()).orElseThrow(
-                () -> new EntityNotFoundException("Survey not found")
-        );
-        return surveyRequestDtoMapper.toResponseDto(surveyWithOwner);
+        Owner owner=ownerDAO.findById(savedSurvey.getOwner().getId()).orElseThrow(
+                () -> new EntityNotFoundException("Survey not found"));
+        savedSurvey.setOwner(owner);
+
+
+        return surveyRequestDtoMapper.toResponseDto(savedSurvey);
 
     }
 

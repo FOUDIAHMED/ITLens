@@ -20,6 +20,7 @@ import java.util.List;
 public class SurveyEditionService implements ServiceInterface<Long, SurveyEditionRequestDto, SurveyEditionResponseDto> {
 
     private final SurveyEditionDAO surveyEditionDAO;
+    private final SurveyDAO surveyDAO;
     private final SurveyEditionDtoMapper surveyEditionDtoMapper;
 
     @Override
@@ -38,6 +39,8 @@ public class SurveyEditionService implements ServiceInterface<Long, SurveyEditio
     @Override
     public SurveyEditionResponseDto create(SurveyEditionRequestDto dto) {
         SurveyEdition savedSurvey = surveyEditionDAO.save(surveyEditionDtoMapper.toEntity(dto));
+        Survey survey=surveyDAO.findById(savedSurvey.getSurvey().getId()).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
+        savedSurvey.setSurvey(survey);
         return surveyEditionDtoMapper.toDto(savedSurvey);
     }
 

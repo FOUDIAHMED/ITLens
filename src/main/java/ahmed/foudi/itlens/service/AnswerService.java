@@ -1,9 +1,14 @@
 package ahmed.foudi.itlens.service;
 
 import ahmed.foudi.itlens.dao.AnswerDAO;
+import ahmed.foudi.itlens.dao.QuestionDAO;
 import ahmed.foudi.itlens.dto.answerdto.AnswerRequestDto;
 import ahmed.foudi.itlens.dto.answerdto.AnswerResponseDto;
+import ahmed.foudi.itlens.dto.response.AnswerDto;
+import ahmed.foudi.itlens.dto.response.ProcessResponsesDto;
+import ahmed.foudi.itlens.dto.response.QuestionResponseDto;
 import ahmed.foudi.itlens.entities.Answer;
+import ahmed.foudi.itlens.entities.Question;
 import ahmed.foudi.itlens.mappers.AnswerDtoMapper;
 import ahmed.foudi.itlens.utils.ServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +23,7 @@ import java.util.List;
 public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, AnswerResponseDto> {
     private final AnswerDAO answerDAO;
     private final AnswerDtoMapper answerDtoMapper;
+    private final QuestionDAO questionDAO;
     @Override
     public List<AnswerResponseDto> findAll() {
         List<Answer> answers=answerDAO.findAll();
@@ -37,6 +43,8 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
     public AnswerResponseDto create(AnswerRequestDto dto) {
         Answer answer = answerDtoMapper.toEntity(dto);
         answerDAO.save(answer);
+        Question question=questionDAO.findById(answer.getQuestion().getId()).orElseThrow(() -> new EntityNotFoundException("question with id " + answer.getQuestion().getId() + " not found"));
+        answer.setQuestion(question);
         return answerDtoMapper.toResponseDto(answer);
     }
 
@@ -59,5 +67,38 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
 
     }
 
-    public answerQuestions()
+    public void processResponses(ProcessResponsesDto dto) {
+        for (QuestionResponseDto questionResponse : dto.getAnswers()) {
+            Long questionId = questionResponse.getQuestionId();
+
+            Question question = questionDAO.findById(questionId)
+                    .orElseThrow(() -> new EntityNotFoundException("Question with id " + questionId + " not found"));
+
+            if (questionResponse.getAnswerId() != null) {
+                Long answerId = questionResponse.getAnswerId();
+
+                Answer answer = answerDAO.findById(answerId)
+                        .orElseThrow(() -> new EntityNotFoundException("Answer with id " + answerId + " not found"));
+
+                answer.setSelectionCount(answer.getSelectionCount() + 1);
+                answerDAO.save(answer);
+                question.setAnswerCount(question.getAnswerCount() + 1);
+                questionDAO.save(question);
+
+            } else if (questionResponse.getAnswers() != null && !questionResponse.getAnswers().isEmpty()) {
+
+                for (AnswerDto answerDto : questionResponse.getAnswers()) {
+                    Long answerId = answerDto.getAnswerId();
+                    Answer answer = answerDAO.findById(answerId)
+                            .orElseThrow(() -> new EntityNotFoundException("Answer with id " + answerId + " not found"));
+
+                    answer.setSelectionCount(answer.getSelectionCount() + 1);
+                    answerDAO.save(answer);
+                }
+                question.setAnswerCount(question.getAnswerCount() + questionResponse.getAnswers().size());
+                questionDAO.save(question);
+            }
+        }
+    }
+
 }

@@ -12,5 +12,6 @@ public interface SurveyEditionDtoMapper {
     @Mapping(source = "surveyId" , target = "survey.id")
     SurveyEdition toEntity(SurveyEditionRequestDto dto);
 
+    @Mapping(target = "subjects", source = "subjects")
     SurveyEditionResponseDto toDto(SurveyEdition entity);
 }

@@ -1,8 +1,7 @@
 package ahmed.foudi.itlens.dto.surveyeditiondto;
 
+import ahmed.foudi.itlens.dto.subjectdto.SubjectResponseDto;
 import ahmed.foudi.itlens.dto.surveydto.SurveyEmbdedDto;
-import ahmed.foudi.itlens.dto.surveydto.SurveyResponseDto;
-import ahmed.foudi.itlens.entities.Subject;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -20,5 +19,5 @@ public class SurveyEditionResponseDto {
 
     private SurveyEmbdedDto survey;
 
-    private List<Subject> subjects;
+    private List<SubjectResponseDto> subjects;
 }

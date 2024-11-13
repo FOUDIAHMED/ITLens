@@ -1,9 +1,11 @@
 package ahmed.foudi.itlens.service;
 
 import ahmed.foudi.itlens.dao.SubjectDAO;
+import ahmed.foudi.itlens.dao.SurveyEditionDAO;
 import ahmed.foudi.itlens.dto.subjectdto.SubjectRequestDto;
 import ahmed.foudi.itlens.dto.subjectdto.SubjectResponseDto;
 import ahmed.foudi.itlens.entities.Subject;
+import ahmed.foudi.itlens.entities.SurveyEdition;
 import ahmed.foudi.itlens.mappers.SubjectDtoMapper;
 import ahmed.foudi.itlens.utils.ServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class SubjectService implements ServiceInterface<Long, SubjectRequestDto, SubjectResponseDto> {
     private final SubjectDAO subjectDAO;
+    private final SurveyEditionDAO surveyEditionDAO;
     private final SubjectDtoMapper subjectDtoMapper;
     @Override
     public List<SubjectResponseDto> findAll() {
@@ -43,6 +46,7 @@ public class SubjectService implements ServiceInterface<Long, SubjectRequestDto,
             parentSubject.getSubSubjects().add(subject);
         }
         Subject savedSubject = subjectDAO.save(subject);
+        SurveyEdition surveyEdition=surveyEditionDAO.findById(savedSubject.getSurveyEdition().getId()).orElseThrow(() -> new IllegalArgumentException("survey edition not found"));
         return subjectDtoMapper.toDto(savedSubject);
     }
 

@@ -2,7 +2,10 @@ package ahmed.foudi.itlens.controller;
 
 import ahmed.foudi.itlens.dto.answerdto.AnswerRequestDto;
 import ahmed.foudi.itlens.dto.answerdto.AnswerResponseDto;
+import ahmed.foudi.itlens.dto.response.ProcessResponsesDto;
+import ahmed.foudi.itlens.entities.Survey;
 import ahmed.foudi.itlens.service.AnswerService;
+import ahmed.foudi.itlens.utils.annotations.Exists;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,6 +47,10 @@ class AnswerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/{surveyId}/participate")
+    public ResponseEntity<Void> participate(@Exists (entityClass = Survey.class,message = "The specified entity does not exist ")@PathVariable Long surveyId, @RequestBody ProcessResponsesDto dto) {
         return ResponseEntity.noContent().build();
     }
 }
