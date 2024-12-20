@@ -2,6 +2,7 @@ package ahmed.foudi.itlens.utils;
 
 
 import ahmed.foudi.itlens.dto.errordto.ErrorDTO;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +14,31 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleAlEntityNotFoundException(Exception ex, WebRequest request) {
+        ErrorDTO errorDTO = new ErrorDTO();
+
+        errorDTO.setTimestamp(LocalDateTime.now());
+        errorDTO.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorDTO.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setPath(request.getDescription(false).replace("uri=", ""));
+        errorDTO.setClassName(ex.getClass().getSimpleName());
+        return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDTO> handleAlIllegalArgumentException(Exception ex, WebRequest request) {
+        ErrorDTO errorDTO = new ErrorDTO();
+
+        errorDTO.setTimestamp(LocalDateTime.now());
+        errorDTO.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorDTO.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setPath(request.getDescription(false).replace("uri=", ""));
+        errorDTO.setClassName(ex.getClass().getSimpleName());
+
+        return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleAllExceptions(Exception ex, WebRequest request) {
@@ -23,6 +49,7 @@ public class GlobalExceptionHandler {
         errorDTO.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         errorDTO.setMessage(ex.getMessage());
         errorDTO.setPath(request.getDescription(false).replace("uri=", ""));
+        errorDTO.setClassName(ex.getClass().getSimpleName());
 
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }

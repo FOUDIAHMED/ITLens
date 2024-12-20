@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OwnerDAO extends JpaRepository<Owner, Long>{
-
+    
 }

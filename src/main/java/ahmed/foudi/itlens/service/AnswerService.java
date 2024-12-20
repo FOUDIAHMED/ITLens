@@ -2,6 +2,7 @@ package ahmed.foudi.itlens.service;
 
 import ahmed.foudi.itlens.dao.AnswerDAO;
 import ahmed.foudi.itlens.dao.QuestionDAO;
+import ahmed.foudi.itlens.dao.SurveyDAO;
 import ahmed.foudi.itlens.dto.answerdto.AnswerRequestDto;
 import ahmed.foudi.itlens.dto.answerdto.AnswerResponseDto;
 import ahmed.foudi.itlens.dto.response.AnswerDto;
@@ -9,6 +10,7 @@ import ahmed.foudi.itlens.dto.response.ProcessResponsesDto;
 import ahmed.foudi.itlens.dto.response.QuestionResponseDto;
 import ahmed.foudi.itlens.entities.Answer;
 import ahmed.foudi.itlens.entities.Question;
+import ahmed.foudi.itlens.entities.Survey;
 import ahmed.foudi.itlens.mappers.AnswerDtoMapper;
 import ahmed.foudi.itlens.utils.ServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +26,7 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
     private final AnswerDAO answerDAO;
     private final AnswerDtoMapper answerDtoMapper;
     private final QuestionDAO questionDAO;
+    private final SurveyDAO surveyDAO;
     @Override
     public List<AnswerResponseDto> findAll() {
         List<Answer> answers=answerDAO.findAll();
@@ -67,26 +70,37 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
 
     }
 
-    public void processResponses(ProcessResponsesDto dto) {
+    public void processResponses(Long surveyId, ProcessResponsesDto dto) {
+        Survey survey = surveyDAO.findById(surveyId)
+                .orElseThrow(() -> new EntityNotFoundException("Survey with id " + surveyId + " not found"));
+
         for (QuestionResponseDto questionResponse : dto.getAnswers()) {
             Long questionId = questionResponse.getQuestionId();
 
             Question question = questionDAO.findById(questionId)
                     .orElseThrow(() -> new EntityNotFoundException("Question with id " + questionId + " not found"));
 
+            boolean isQuestionInSurvey = survey.getSurveyEditions().stream()
+                    .flatMap(edition -> edition.getSubjects().stream())
+                    .flatMap(subject -> subject.getQuestions().stream())
+                    .anyMatch(q -> q.getId().equals(questionId));
+
+            if (!isQuestionInSurvey) {
+                throw new IllegalArgumentException("Question with id " + questionId + " does not belong to the survey with id " + surveyId);
+            }
+
             if (questionResponse.getAnswerId() != null) {
                 Long answerId = questionResponse.getAnswerId();
-
                 Answer answer = answerDAO.findById(answerId)
                         .orElseThrow(() -> new EntityNotFoundException("Answer with id " + answerId + " not found"));
 
                 answer.setSelectionCount(answer.getSelectionCount() + 1);
                 answerDAO.save(answer);
+
                 question.setAnswerCount(question.getAnswerCount() + 1);
                 questionDAO.save(question);
 
             } else if (questionResponse.getAnswers() != null && !questionResponse.getAnswers().isEmpty()) {
-
                 for (AnswerDto answerDto : questionResponse.getAnswers()) {
                     Long answerId = answerDto.getAnswerId();
                     Answer answer = answerDAO.findById(answerId)
@@ -95,10 +109,12 @@ public class AnswerService implements ServiceInterface<Long, AnswerRequestDto, A
                     answer.setSelectionCount(answer.getSelectionCount() + 1);
                     answerDAO.save(answer);
                 }
+
                 question.setAnswerCount(question.getAnswerCount() + questionResponse.getAnswers().size());
                 questionDAO.save(question);
             }
         }
     }
+
 
 }

@@ -14,4 +14,5 @@ public class ErrorDTO {
     private String message;
     private LocalDateTime timestamp;
     private String path;
+    private String className;
 }

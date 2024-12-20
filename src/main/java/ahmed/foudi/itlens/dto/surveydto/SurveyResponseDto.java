@@ -2,6 +2,7 @@ package ahmed.foudi.itlens.dto.surveydto;
 
 import ahmed.foudi.itlens.dto.ownerdto.OwnerEmbdedDto;
 import ahmed.foudi.itlens.dto.surveyeditiondto.SurveyEditionEmbeddedDTO;
+import ahmed.foudi.itlens.dto.surveyeditiondto.SurveyEditionResponseDto;
 import ahmed.foudi.itlens.entities.SurveyEdition;
 import lombok.Data;
 
@@ -13,5 +14,5 @@ public class SurveyResponseDto {
     private String title;
     private String description;
     private OwnerEmbdedDto owner;
-    private List<SurveyEditionEmbeddedDTO> surveyEditions;
+    private List<SurveyEditionResponseDto> surveyEditions;
 }

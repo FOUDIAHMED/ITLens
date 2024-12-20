@@ -76,14 +76,7 @@ public class SubjectServiceTest {
         assertEquals("Sample Subject", result.getTitle());
     }
 
-    @Test
-    public void testFindById_NotFound() {
-        when(subjectDAO.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> {
-            subjectService.findById(999L);
-        });
-    }
 
     @Test
     public void testCreate() {

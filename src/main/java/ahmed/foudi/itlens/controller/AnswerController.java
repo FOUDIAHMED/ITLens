@@ -51,6 +51,7 @@ class AnswerController {
     }
     @PostMapping("/{surveyId}/participate")
     public ResponseEntity<Void> participate(@Exists (entityClass = Survey.class,message = "The specified entity does not exist ")@PathVariable Long surveyId, @RequestBody ProcessResponsesDto dto) {
+        service.processResponses(surveyId,dto);
         return ResponseEntity.noContent().build();
     }
 }
